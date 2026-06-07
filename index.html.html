@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y-Teen 3 Final Exam - Interactive Revision Quiz</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary: #1e40af;
+            --primary-hover: #1e3a8a;
+            --border-color: #cbd5e1;
+            --hint-bg: #f1f5f9;
+            --success-bg: #f0fdf4;
+            --success-text: #166534;
+            --success-border: #bbf7d0;
+            --error-bg: #fef2f2;
+            --error-text: #991b1b;
+            --error-border: #fecaca;
+            --info-bg: #f8fafc;
+            --info-text: #334155;
+            --info-border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 640px;
+            margin-top: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+        }
+
+        header p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .meta {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-wrapper {
+            position: relative;
+        }
+
+        .option-wrapper input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .option-label {
+            display: block;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-wrapper input[type="radio"]:checked + .option-label {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+            font-weight: 500;
+        }
+
+        .option-label:hover {
+            background-color: var(--hint-bg);
+        }
+
+        .text-input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            transition: border-color 0.2s;
+        }
+
+        .text-input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .hint-container {
+            background-color: var(--hint-bg);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .action-button {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .action-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .feedback-message {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .feedback-message.correct {
+            display: block;
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid var(--success-border);
+        }
+
+        .feedback-message.incorrect {
+            display: block;
+            background-color: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid var(--error-border);
+        }
+
+        .feedback-message.writing-review {
+            display: block;
+            background-color: var(--info-bg);
+            color: var(--info-text);
+            border: 1px solid var(--info-border);
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Y-Teen 3 Final Exam</h1>
+        <p>Interactive Revision Quiz</p>
+    </header>
+
+    <!-- Q1 -->
+    <div class="question-card" id="q1">
+        <div class="meta">Question 1</div>
+        <div class="question-text">Choose the correct option to talk about Julia's last vacation: "Last year, Julia ______ to an amazing ecotourism experience in Mato Grosso."</div>
+        <div class="options-container">
+            <div class="option-wrapper">
+                <input type="radio" name="q1" id="q1_a" value="A">
+                <label for="q1_a" class="option-label">went</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q1" id="q1_b" value="B">
+                <label for="q1_b" class="option-label">goes</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q1" id="q1_c" value="C">
+                <label for="q1_c" class="option-label">was gone</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q1" id="q1_d" value="D">
+                <label for="q1_d" class="option-label">go</label>
+            </div>
+        </div>
+        <div class="hint-container">Hint: Remember that we are describing a trip that already happened ("Last year") and the verb is irregular.</div>
+        <button class="action-button" onclick="checkMultipleChoice('q1', 'A', 'O verbo \'go\' é irregular e a sua forma no passado simples para ações concluídas é \'went\'.', 'A forma correta exige o passado simples por causa do termo estrutural de tempo \'Last year\'.')">Check Answer</button>
+        <div class="feedback-message"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-card" id="q2">
+        <div class="meta">Question 2</div>
+        <div class="question-text">Which sentence correctly compares the food prices between the two places from the text? "The food in Mato Grosso is ______ than the food in São Paulo."</div>
+        <div class="options-container">
+            <div class="option-wrapper">
+                <input type="radio" name="q2" id="q2_a" value="A">
+                <label for="q2_a" class="option-label">cheaper</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q2" id="q2_b" value="B">
+                <label for="q2_b" class="option-label">more cheap</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q2" id="q2_c" value="C">
+                <label for="q2_c" class="option-label">cheaper than</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q2" id="q2_d" value="D">
+                <label for="q2_d" class="option-label">cheapest</label>
+            </div>
+        </div>
+        <div class="hint-container">Hint: Short adjectives (one syllable) receive a structural change directly at the end of the word to indicate comparison.</div>
+        <button class="action-button" onclick="checkMultipleChoice('q2', 'A', 'Para adjetivos curtos de uma sílaba (como \'cheap\'), formamos o comparativo de superioridade adicionando o sufixo \'-er\'.', 'Adjetivos curtos recebem alteração estrutural no final da palavra. Não modifique usando \'more cheap\'.')">Check Answer</button>
+        <div class="feedback-message"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-card" id="q3">
+        <div class="meta">Question 3</div>
+        <div class="question-text">Doug is talking about his green plans to protect the environment next week. Complete his statement: "I ______ shorter showers to save water."</div>
+        <div class="options-container">
+            <div class="option-wrapper">
+                <input type="radio" name="q3" id="q3_a" value="A">
+                <label for="q3_a" class="option-label">am going to take</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q3" id="q3_b" value="B">
+                <label for="q3_b" class="option-label">going to take</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q3" id="q3_c" value="C">
+                <label for="q3_c" class="option-label">take</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q3" id="q3_d" value="D">
+                <label for="q3_d" class="option-label">will going to take</label>
+            </div>
+        </div>
+        <div class="hint-container">Hint: To talk about future plans with the personal pronoun 'I', you need the auxiliary verb 'am' before 'going to'.</div>
+        <button class="action-button" onclick="checkMultipleChoice('q3', 'A', 'A estrutura completa \'be going to\' conjugada no presente (\'am\') expressa intenções e planos futuros do falante.', 'Falta validação do verbo auxiliar de tempo para acompanhar a estrutura de planejamento futuro.')">Check Answer</button>
+        <div class="feedback-message"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-card" id="q4">
+        <div class="meta">Question 4</div>
+        <div class="question-text">Esther wants to give some eco-friendly advice to Doug. What is the most appropriate phrase? "Doug, you ______ aerosol sprays. It's bad for the planet."</div>
+        <div class="options-container">
+            <div class="option-wrapper">
+                <input type="radio" name="q4" id="q4_a" value="A">
+                <label for="q4_a" class="option-label">shouldn't use</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q4" id="q4_b" value="B">
+                <label for="q4_b" class="option-label">must to use</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q4" id="q4_c" value="C">
+                <label for="q4_c" class="option-label">should using</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q4" id="q4_d" value="D">
+                <label for="q4_d" class="option-label">don't have to use</label>
+            </div>
+        </div>
+        <div class="hint-container">Hint: Identify the ideal modal verb to express direct advice that something should not be done because it is a bad idea.</div>
+        <button class="action-button" onclick="checkMultipleChoice('q4', 'A', 'O modal \'shouldn\'t\' é utilizado para dar conselhos ou recomendações negativas sobre ações prejudiciais.', 'Verbos modais necessitam da estrutura correta e sem a partícula \'to\' subsequente.')">Check Answer</button>
+        <div class="feedback-message"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-card" id="q5">
+        <div class="meta">Question 5</div>
+        <div class="question-text">Ginny is talking about a past choice from last Saturday. Choose the correct pattern: "My family wanted to go to a restaurant, but I ______ to stay home and order pizza."</div>
+        <div class="options-container">
+            <div class="option-wrapper">
+                <input type="radio" name="q5" id="q5_a" value="A">
+                <label for="q5_a" class="option-label">preferred</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q5" id="q5_b" value="B">
+                <label for="q5_b" class="option-label">would rather</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q5" id="q5_c" value="C">
+                <label for="q5_c" class="option-label">preferring</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q5" id="q5_d" value="D">
+                <label for="q5_d" class="option-label">prefers</label>
+            </div>
+        </div>
+        <div class="hint-container">Hint: The sentence contextualizes a decision made in the past ('wanted'). Apply the Simple Past form of the verb 'prefer'.</div>
+        <button class="action-button" onclick="checkMultipleChoice('q5', 'A', 'O verbo \'prefer\' é regular. No passado simples ele recebe o sufixo \'-red\', descrevendo uma escolha concluída.', 'Se a oração principal indica passado (\'wanted\'), a escolha correlata deve seguir a harmonia verbal.')">Check Answer</button>
+        <div class="feedback-message"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-card" id="q6">
+        <div class="meta">Question 6</div>
+        <div class="question-text">Tom is suggesting a fun option to his friends for next weekend. Choose the correct pattern: "How about ______ a mystery board game?"</div>
+        <div class="options-container">
+            <div class="option-wrapper">
+                <input type="radio" name="q6" id="q6_a" value="A">
+                <label for="q6_a" class="option-label">playing</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q6" id="q6_b" value="B">
+                <label for="q6_b" class="option-label">play</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q6" id="q6_c" value="C">
+                <label for="q6_c" class="option-label">to play</label>
+            </div>
+            <div class="option-wrapper">
+                <input type="radio" name="q6" id="q6_d" value="D">
+                <label for="q6_d" class="option-label">played</label>
+            </div>
+        </div>
+        <div class="hint-container">Hint: Fixed expressions of suggestion like 'How about...?' modify the format of the next verb, adding three letters to its end.</div>
+        <button class="action-button" onclick="checkMultipleChoice('q6', 'A', 'A expressão de proposta e sugestão \'How about...?\' exige que o verbo subsequente receba o sufixo \'-ing\'.', 'Termos preposicionados de sugestão direta necessitam da modificação gerundiva no verbo seguinte.')">Check Answer</button>
+        <div class="feedback-message"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-card" id="q7">
+        <div class="meta">Hangout Practice 1</div>
+        <div class="question-text">Task: Write 1 sentence telling your friends WHERE you went last weekend and WHO was with you.[cite: 5]</div>
+        <div class="hint-container">Tip: Use 'Last weekend, I went to [place] with [people]'.[cite: 5]</div>
+        <input type="text" class="text-input-field" placeholder="Type your full sentence here...">
+        <button class="action-button" onclick="checkWritingResponse('q7', 'Common Mistakes - Check your text:\n1. Did you write \'go\' or \'goes\'? Wrong. Use \'went\' for past.[cite: 5]\n2. Did you forget \'with\'? Wrong. Use \'with\' to connect people.[cite: 5]\n\nCorrect example: \'Last weekend, I went to the beach with my family.\'[cite: 5]')">Verify Writing</button>
+        <div class="feedback-message"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-card" id="q8">
+        <div class="meta">Hangout Practice 2</div>
+        <div class="question-text">Task: Write 1 sentence showing that someone else wanted to do an activity, but you preferred another.[cite: 5]</div>
+        <div class="hint-container">Tip: Use 'My friend wanted to [verb], but I preferred to [verb]'.[cite: 5]</div>
+        <input type="text" class="text-input-field" placeholder="Type your full sentence here...">
+        <button class="action-button" onclick="checkWritingResponse('q8', 'Common Mistakes - Check your text:\n1. Did you write \'want\' or \'prefer\' without the -ed? Wrong. Use \'wanted to\' and \'preferred to\' for past choices.[cite: 5]\n2. Did you use \'would rather\' before \'to\'? Wrong. \'Would rather\' does not take \'to\'.[cite: 5]\n\nCorrect example: \'My sister wanted to go to the park, but I preferred to stay home.\'[cite: 5]')">Verify Writing</button>
+        <div class="feedback-message"></div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question-card" id="q9">
+        <div class="meta">Hangout Practice 3</div>
+        <div class="question-text">Task: Write a short invitation for next weekend and offer an alternative option using 'How about'.[cite: 5]</div>
+        <div class="hint-container">Tip: Use 'Do you want to go to [place]? Or how about [verb+ING]...?'.[cite: 5]</div>
+        <input type="text" class="text-input-field" placeholder="Type your full sentence here...">
+        <button class="action-button" onclick="checkWritingResponse('q9', 'Common Mistakes - Check your text:\n1. Did you use the base verb after \'how about\' (like \'how about play\')? Wrong. You must use -ING (like \'how about playing\').[cite: 5]\n2. Did you forget the question marks? Wrong. These are invitation questions.[cite: 5]\n\nCorrect example: \'Do you want to play soccer? Or how about watching a movie?\'[cite: 5]')">Verify Writing</button>
+        <div class="feedback-message"></div>
+    </div>
+
+</div>
+
+<script>
+    function checkMultipleChoice(cardId, correctVal, successText, errorText) {
+        const card = document.getElementById(cardId);
+        const selectedOption = card.querySelector('input[type="radio"]:checked');
+        const feedbackBlock = card.querySelector('.feedback-message');
+
+        if (!selectedOption) {
+            feedbackBlock.className = "feedback-message incorrect";
+            feedbackBlock.innerText = "Please select an option before checking.";
+            return;
+        }
+
+        if (selectedOption.value === correctVal) {
+            feedbackBlock.className = "feedback-message correct";
+            feedbackBlock.innerText = "Correct! " + successText;
+        } else {
+            feedbackBlock.className = "feedback-message incorrect";
+            feedbackBlock.innerText = "Incorrect. " + errorText;
+        }
+    }
+
+    function checkWritingResponse(cardId, reviewTemplate) {
+        const card = document.getElementById(cardId);
+        const textContent = card.querySelector('.text-input-field').value.trim();
+        const feedbackBlock = card.querySelector('.feedback-message');
+
+        if (textContent === "") {
+            feedbackBlock.className = "feedback-message incorrect";
+            feedbackBlock.innerText = "Please type your sentence before checking.";
+            return;
+        }
+
+        feedbackBlock.className = "feedback-message writing-review";
+        feedbackBlock.innerText = reviewTemplate;
+    }
+</script>
+
+</body>
+</html>
